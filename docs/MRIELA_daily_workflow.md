@@ -1,0 +1,16 @@
+﻿# MRIELA Daily Workflow
+
+## Start Work
+git -C C:\AI_AGENT_WORKSPACE_MRIELA\CHATGPT_AI_WORKSPACE pull
+
+## Put Work
+Place files in:
+- handoff/to-SPALITUDA/
+- assets/
+- tasks/
+
+## Finish Work
+git -C C:\AI_AGENT_WORKSPACE_MRIELA\CHATGPT_AI_WORKSPACE status
+git -C C:\AI_AGENT_WORKSPACE_MRIELA\CHATGPT_AI_WORKSPACE add .
+git -C C:\AI_AGENT_WORKSPACE_MRIELA\CHATGPT_AI_WORKSPACE commit -m "Describe work done on MRIELA"
+git -C C:\AI_AGENT_WORKSPACE_MRIELA\CHATGPT_AI_WORKSPACE push
