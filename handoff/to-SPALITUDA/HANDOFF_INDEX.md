@@ -24,3 +24,6 @@ Next on SPALITUDA: Choose the direction that best matches the Unity venue, then 
 ### test_handoff_from_MRIELA.md
 Role: Test file confirming that MRIELA can create work and pass it to SPALITUDA through GitHub.
 Next on SPALITUDA: Use it only as a basic workflow confirmation file.
+
+- `poster_source_handoff.md`  
+  MRIELA 側で作成したポスター制作準備資料を SPALITUDA へ引き渡すためのメモ。
