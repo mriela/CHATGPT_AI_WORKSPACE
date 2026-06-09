@@ -121,7 +121,7 @@ class TaskHandler(BaseHTTPRequestHandler):
         try:
             # 既存の tasks.json を読み込む
             if os.path.exists(TASKS_FILE):
-                with open(TASKS_FILE, "r", encoding="utf-8") as f:
+                with open(TASKS_FILE, "r", encoding="utf-8-sig") as f:
                     tasks_data = json.load(f)
             else:
                 tasks_data = {"tasks": []}
