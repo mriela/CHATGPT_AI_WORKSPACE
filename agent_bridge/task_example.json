@@ -1,0 +1,6 @@
+{
+  "id": "task001",
+  "type": "create_file",
+  "target": "agent_bridge/hello.txt",
+  "content": "Hello from Task"
+}

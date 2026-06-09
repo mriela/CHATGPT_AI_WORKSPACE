@@ -1,0 +1,7 @@
+﻿__pycache__/
+*.pyc
+.venv/
+agent_bridge/tasks.json
+agent_bridge/results.json
+agent_bridge/status.json
+agent_bridge/*.bak

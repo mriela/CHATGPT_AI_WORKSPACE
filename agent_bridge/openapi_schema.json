@@ -1,0 +1,223 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AI Workspace Task Server API",
+    "description": "AI Agentにタスクを投入するためのAPI。ChatGPT Actionsから直接呼び出し可能。",
+    "version": "1.0.0",
+    "contact": {
+      "name": "AI Workspace Support"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://pension-preteen-emblaze.ngrok-free.dev",
+      "description": "ngrok HTTPSトンネルURL（実環境用）"
+    }
+  ],
+  "paths": {
+    "/task": {
+      "post": {
+        "summary": "AI Agentにタスクを投入する",
+        "description": "tasks.json に新しいタスクを追加し、agent_loop.py が自動的に処理します。",
+        "operationId": "submitTask",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Task"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "タスクが正常に追加された",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "無効なリクエスト（JSON形式エラー、空のボディ等）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー（APIキーが無効、または未提供）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "サーバーエラー（tasks.json 書き込みエラー等）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "サーバーのヘルスチェック",
+        "description": "サーバーが稼働しているか確認します。",
+        "operationId": "healthCheck",
+        "responses": {
+          "200": {
+            "description": "サーバーは正常に稼働中",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Task": {
+        "type": "object",
+        "description": "AI Agentに投入するタスク",
+        "required": [
+          "id",
+          "type",
+          "target"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "タスクの一意識別子",
+            "example": "task_20260531_001"
+          },
+          "type": {
+            "type": "string",
+            "description": "タスクのタイプ",
+            "enum": [
+              "create_file",
+              "read_file",
+              "delete_file",
+              "run_command"
+            ],
+            "example": "create_file"
+          },
+          "target": {
+            "type": "string",
+            "description": "対象ファイルパス（相対パスまたは絶対パス）",
+            "example": "output/test.txt"
+          },
+          "content": {
+            "type": "string",
+            "description": "ファイル作成時の内容（create_file タイプの場合）",
+            "example": "Hello from ChatGPT!"
+          }
+        }
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "レスポンスステータス",
+            "example": "success"
+          },
+          "message": {
+            "type": "string",
+            "description": "処理結果のメッセージ",
+            "example": "1 task(s) added to tasks.json"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "処理時刻",
+            "example": "2026-05-31T10:00:00.000000"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "エラーレスポンスステータス",
+            "example": "error"
+          },
+          "message": {
+            "type": "string",
+            "description": "エラーメッセージ",
+            "example": "Invalid JSON format"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "エラー発生時刻",
+            "example": "2026-05-31T10:00:00.000000"
+          }
+        }
+      },
+      "HealthResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "サーバー状態",
+            "example": "ok"
+          },
+          "message": {
+            "type": "string",
+            "description": "メッセージ",
+            "example": "Server is running"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "チェック時刻",
+            "example": "2026-05-31T10:00:00.000000"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API認証用のBearer Token。環境変数 TASK_SERVER_API_KEY で設定。"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Tasks",
+      "description": "AI Agentタスク管理"
+    },
+    {
+      "name": "Health",
+      "description": "サーバー状態確認"
+    }
+  ]
+}
